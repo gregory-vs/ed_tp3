@@ -1,49 +1,49 @@
 #ifndef REQUEST_H
 #define REQUEST_H
 
-#include <string>
-
-using namespace std;
-
-enum RequestState
-{
-    REQUESTED = 1,
-    INDIVIDUAL,
-    COMBINED,
-    COMPLETED
-};
-
-class Request
-{
+class Request {
 private:
-    int id;
-    double requestTime;
-    double originX, originY;
-    double destinationX, destinationY;
-    RequestState state;
+    int requestId;               // Identifier of the query request
+    char* rawQueryText;          // Full query text (e.g. "CALDEIRA BRANT")
 
-    double traveledDistance;
-    double completionTime;
+    char** words;                // Array of extracted words
+    int wordCount;
+    int wordCapacity;
+
+    double originLatitude;       // Origin point for distance calculation
+    double originLongitude;
+
+    char* copyString(const char* s);
+    void ensureWordCapacity();
+    void extractWords();         // Parse rawQueryText into words[]
 
 public:
-    Request();
-    Request(int id, double time, double ox, double oy, double dx, double dy);
+    // Constructor
+    Request(
+        int requestId,
+        const char* queryText,
+        double originLatitude,
+        double originLongitude
+    );
 
-    int getId() const;
-    double getRequestTime() const;
-    double getOriginX() const;
-    double getOriginY() const;
-    double getDestinationX() const;
-    double getDestinationY() const;
-    RequestState getState() const;
-    double getTraveledDistance() const;
-    double getCompletionTime() const;
+    // Destructor
+    ~Request();
 
-    void setState(RequestState newState);
-    void setTraveledDistance(double distance);
-    void setCompletionTime(double time);
+    // Getters
+    int getRequestId() const;
+    const char* getRawQueryText() const;
+    int getWordCount() const;
+    const char* getWordAt(int index) const;
+    double getOriginLatitude() const;
+    double getOriginLongitude() const;
 
-    double calculateODDistance() const;
+    // Setters
+    void setRequestId(int value);
+    void setOriginLatitude(double value);
+    void setOriginLongitude(double value);
+
+    // Replace the entire query text (re-parses words)
+    void setQueryText(const char* newText);
 };
 
 #endif
