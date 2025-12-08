@@ -1,52 +1,43 @@
 #ifndef STREET_H
 #define STREET_H
 
+#include <string>
+
 class Street {
 private:
-    int streetId;         // Unique identifier for the street
-    char* type;           // Street type (RUA, AVENIDA, etc.)
-    char* name;           // Street name (may contain multiple words)
-    char* district;       // Not always unique but stored for reference
-    char* region;         // Region of the city
-
-    double meanLatitude;   // Average latitude of all addresses
-    double meanLongitude;  // Average longitude of all addresses
-    int addressCount;      // Number of addresses used to compute the mean
-
-    char* copyString(const char* s);
-    void replaceString(char*& field, const char* value);
+    double idLog;
+    std::string streetType;
+    std::string streetName;
+    double avgLatitude;
+    double avgLongitude;
 
 public:
-    // Constructor
+    // Constructors
+    Street();
     Street(
-        int streetId,
-        const char* type,
-        const char* name,
-        const char* district,
-        const char* region
+        double idLog,
+        const std::string& streetType,
+        const std::string& streetName,
+        double avgLatitude,
+        double avgLongitude
     );
 
-    // Destructor
-    ~Street();
-
-    // Add an address coordinate to update meanLat/meanLong
-    void addAddressCoordinate(double lat, double lon);
-
     // Getters
-    int getStreetId() const;
-    const char* getType() const;
-    const char* getName() const;
-    const char* getDistrict() const;
-    const char* getRegion() const;
-    double getMeanLatitude() const;
-    double getMeanLongitude() const;
-    int getAddressCount() const;
+    double getIdLog() const;
+    std::string getStreetType() const;
+    std::string getStreetName() const;
+    double getAvgLatitude() const;
+    double getAvgLongitude() const;
 
     // Setters
-    void setType(const char* value);
-    void setName(const char* value);
-    void setDistrict(const char* value);
-    void setRegion(const char* value);
+    void setIdLog(double value);
+    void setStreetType(const std::string& value);
+    void setStreetName(const std::string& value);
+    void setAvgLatitude(double value);
+    void setAvgLongitude(double value);
+
+    // Utility: returns the full street name (e.g., "RUA ADEMAR PIMENTA BRANT")
+    std::string getFullName() const;
 };
 
 #endif

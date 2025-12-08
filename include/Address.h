@@ -1,63 +1,68 @@
 #ifndef ADDRESS_H
 #define ADDRESS_H
 
+#include <string>
+
 class Address {
 private:
-    char* addressId;   // ID of the specific address
-    int   streetId;    // ID of the street (logradouro)
-    char* type;        // Street type (RUA, AVENIDA, etc.)
-    char* name;        // Street name
-    int   number;      // House/building number
-    char* district;    // Neighborhood
-    char* region;      // City region
-    char* cep;         // Postal code
-    double latitude;   // Latitude
-    double longitude;  // Longitude
-
-    char* copyString(const char* s);
-    void replaceString(char*& field, const char* value);
+    double idEnd;
+    double idLog;
+    std::string streetType;
+    std::string streetName;
+    std::string number;
+    std::string neighborhood;
+    std::string region;
+    std::string cep;
+    double latitude;
+    double longitude;
 
 public:
-    // Constructor
+    Address();
+
     Address(
-        const char* addressId,
-        int streetId,
-        const char* type,
-        const char* name,
-        int number,
-        const char* district,
-        const char* region,
-        const char* cep,
+        double idEnd,
+        double idLog,
+        const std::string& streetType,
+        const std::string& streetName,
+        const std::string& number,
+        const std::string& neighborhood,
+        const std::string& region,
+        const std::string& cep,
         double latitude,
         double longitude
     );
 
-    // Destructor
-    ~Address();
-
     // Getters
-    const char* getAddressId() const;
-    int getStreetId() const;
-    const char* getType() const;
-    const char* getName() const;
-    int getNumber() const;
-    const char* getDistrict() const;
-    const char* getRegion() const;
-    const char* getCep() const;
+    double getIdEnd() const;
+    double getIdLog() const;
+    std::string getStreetType() const;
+    std::string getStreetName() const;
+    std::string getNumber() const;
+    std::string getNeighborhood() const;
+    std::string getRegion() const;
+    std::string getCep() const;
     double getLatitude() const;
     double getLongitude() const;
 
     // Setters
-    void setAddressId(const char* value);
-    void setStreetId(int value);
-    void setType(const char* value);
-    void setName(const char* value);
-    void setNumber(int value);
-    void setDistrict(const char* value);
-    void setRegion(const char* value);
-    void setCep(const char* value);
+    void setIdEnd(double value);
+    void setIdLog(double value);
+    void setStreetType(const std::string& value);
+    void setStreetName(const std::string& value);
+    void setNumber(const std::string& value);
+    void setNeighborhood(const std::string& value);
+    void setRegion(const std::string& value);
+    void setCep(const std::string& value);
     void setLatitude(double value);
     void setLongitude(double value);
+
+    // Utility
+    static void computeAverageCoordinates(
+        const Address* list,
+        int size,
+        double& avgLat,
+        double& avgLong
+    );
 };
 
 #endif

@@ -1,81 +1,98 @@
 #include "Word.h"
-#include <cstring>
-#include <cstdlib>
+#include <iostream>
 
-// Helper: copy C-string into newly allocated memory
-char* Word::copyString(const char* s) {
-    char* c = (char*) malloc((strlen(s) + 1) * sizeof(char));
-    strcpy(c, s);
-    return c;
+Word::Word()
+    : text(""), count(0), capacity(2)
+{
+    streetIds = new double[capacity];
 }
 
-// Ensure capacity for at least one more streetId
-void Word::ensureCapacity() {
-    if (streetCount < streetCapacity) {
-        return;
-    }
-
-    int newCapacity = (streetCapacity == 0) ? 4 : streetCapacity * 2;
-    int* newArray = (int*) malloc(newCapacity * sizeof(int));
-
-    for (int i = 0; i < streetCount; i++) {
-        newArray[i] = streetIds[i];
-    }
-
-    free(streetIds);
-    streetIds = newArray;
-    streetCapacity = newCapacity;
+Word::Word(const std::string& text)
+    : text(text), count(0), capacity(2)
+{
+    streetIds = new double[capacity];
 }
 
-// Check if a streetId is already stored (to avoid duplicates)
-bool Word::containsStreetId(int streetId) const {
-    for (int i = 0; i < streetCount; i++) {
-        if (streetIds[i] == streetId) {
-            return true;
+Word::Word(const Word& other)
+    : text(other.text),
+      count(other.count),
+      capacity(other.capacity)
+{
+    streetIds = new double[capacity];
+    for (int i = 0; i < count; ++i) {
+        streetIds[i] = other.streetIds[i];
+    }
+}
+
+Word& Word::operator=(const Word& other) {
+    if (this != &other) {
+        // libera o array atual
+        delete[] streetIds;
+
+        text = other.text;
+        count = other.count;
+        capacity = other.capacity;
+
+        streetIds = new double[capacity];
+        for (int i = 0; i < count; ++i) {
+            streetIds[i] = other.streetIds[i];
         }
     }
-    return false;
+    return *this;
 }
 
-// Constructor
-Word::Word(const char* text) {
-    this->text = copyString(text);
-    this->streetIds = NULL;
-    this->streetCount = 0;
-    this->streetCapacity = 0;
-}
-
-// Destructor
 Word::~Word() {
-    free(text);
-    free(streetIds);
+    delete[] streetIds;
 }
 
-// Getters
-const char* Word::getText() const {
+std::string Word::getText() const {
     return text;
 }
 
-int Word::getStreetCount() const {
-    return streetCount;
+int Word::getCount() const {
+    return count;
 }
 
-const int* Word::getStreetIds() const {
-    return streetIds;
-}
-
-int Word::getStreetIdAt(int index) const {
-    // Assumes index is valid (0 <= index < streetCount)
+double Word::getStreetIdAt(int index) const {
+    if (index < 0 || index >= count) return -1;
     return streetIds[index];
 }
 
-// Add a streetId to the list if not already present
-void Word::addStreetId(int streetId) {
-    if (containsStreetId(streetId)) {
-        return; // avoid duplicates
+void Word::setText(const std::string& value) {
+    text = value;
+}
+
+
+void Word::expand() {
+    capacity *= 2;
+    double* newArr = new double[capacity];
+
+    for (int i = 0; i < count; i++) {
+        newArr[i] = streetIds[i];
     }
 
-    ensureCapacity();
-    streetIds[streetCount] = streetId;
-    streetCount++;
+    delete[] streetIds;
+    streetIds = newArr;
+}
+
+
+void Word::addStreetId(double idLog) {
+    if (count == capacity) {
+        expand();
+    }
+
+    streetIds[count] = idLog;
+    count++;
+}
+
+
+void Word::print() const {
+    std::cout << "Word: " << text << "\nOccurs in logradouros: ";
+
+    for (int i = 0; i < count; i++) {
+        std::cout << streetIds[i];
+        if (i < count - 1) std::cout << ", ";
+    }
+
+    std::cout << "\n";
 }

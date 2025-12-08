@@ -9,6 +9,8 @@ TARGET := $(BIN_DIR)/tp3.out
 SRCS := $(wildcard $(SRC_DIR)/*.cpp)
 OBJS := $(patsubst $(SRC_DIR)/%.cpp, $(OBJ_DIR)/%.o, $(SRCS))
 
+FILE ?= entrada.txt
+
 all: $(BIN_DIR) $(OBJ_DIR) $(TARGET)
 
 $(TARGET): $(OBJS)
@@ -21,7 +23,8 @@ $(OBJ_DIR) $(BIN_DIR):
 	mkdir -p $@
 
 clean:
-	rm -rf $(OBJ_DIR)/*.o $(TARGET)
+	rm -f $(OBJ_DIR)/*.o
+	rm -f $(TARGET)
 
 run: all
-	$(TARGET) $(FILE)
+	./$(TARGET) < $(FILE)

@@ -1,75 +1,71 @@
 #include "Address.h"
-#include <cstring>
-#include <cstdlib>
 
-// Helper: copy C-string into new memory
-char* Address::copyString(const char* s) {
-    char* c = (char*) malloc((strlen(s) + 1) * sizeof(char));
-    strcpy(c, s);
-    return c;
-}
+// Constructors
+Address::Address()
+    : idEnd(0), idLog(0), streetType(""), streetName(""),
+      number(""), neighborhood(""), region(""), cep(""),
+      latitude(0.0), longitude(0.0) {}
 
-// Helper: replace an existing string field
-void Address::replaceString(char*& field, const char* value) {
-    free(field);
-    field = copyString(value);
-}
-
-// Constructor
 Address::Address(
-    const char* addressId,
-    int streetId,
-    const char* type,
-    const char* name,
-    int number,
-    const char* district,
-    const char* region,
-    const char* cep,
+    double idEnd,
+    double idLog,
+    const std::string& streetType,
+    const std::string& streetName,
+    const std::string& number,
+    const std::string& neighborhood,
+    const std::string& region,
+    const std::string& cep,
     double latitude,
     double longitude
-) {
-    this->addressId = copyString(addressId);
-    this->streetId  = streetId;
-    this->type      = copyString(type);
-    this->name      = copyString(name);
-    this->number    = number;
-    this->district  = copyString(district);
-    this->region    = copyString(region);
-    this->cep       = copyString(cep);
-    this->latitude  = latitude;
-    this->longitude = longitude;
-}
+)
+    : idEnd(idEnd), idLog(idLog), streetType(streetType),
+      streetName(streetName), number(number),
+      neighborhood(neighborhood), region(region),
+      cep(cep), latitude(latitude), longitude(longitude) {}
 
-// Destructor
-Address::~Address() {
-    free(addressId);
-    free(type);
-    free(name);
-    free(district);
-    free(region);
-    free(cep);
-}
 
 // Getters
-const char* Address::getAddressId() const { return addressId; }
-int Address::getStreetId() const { return streetId; }
-const char* Address::getType() const { return type; }
-const char* Address::getName() const { return name; }
-int Address::getNumber() const { return number; }
-const char* Address::getDistrict() const { return district; }
-const char* Address::getRegion() const { return region; }
-const char* Address::getCep() const { return cep; }
+double Address::getIdEnd() const { return idEnd; }
+double Address::getIdLog() const { return idLog; }
+std::string Address::getStreetType() const { return streetType; }
+std::string Address::getStreetName() const { return streetName; }
+std::string Address::getNumber() const { return number; }
+std::string Address::getNeighborhood() const { return neighborhood; }
+std::string Address::getRegion() const { return region; }
+std::string Address::getCep() const { return cep; }
 double Address::getLatitude() const { return latitude; }
 double Address::getLongitude() const { return longitude; }
 
 // Setters
-void Address::setAddressId(const char* value) { replaceString(addressId, value); }
-void Address::setStreetId(int value) { streetId = value; }
-void Address::setType(const char* value) { replaceString(type, value); }
-void Address::setName(const char* value) { replaceString(name, value); }
-void Address::setNumber(int value) { number = value; }
-void Address::setDistrict(const char* value) { replaceString(district, value); }
-void Address::setRegion(const char* value) { replaceString(region, value); }
-void Address::setCep(const char* value) { replaceString(cep, value); }
+void Address::setIdEnd(double value) { idEnd = value; }
+void Address::setIdLog(double value) { idLog = value; }
+void Address::setStreetType(const std::string& value) { streetType = value; }
+void Address::setStreetName(const std::string& value) { streetName = value; }
+void Address::setNumber(const std::string& value) { number = value; }
+void Address::setNeighborhood(const std::string& value) { neighborhood = value; }
+void Address::setRegion(const std::string& value) { region = value; }
+void Address::setCep(const std::string& value) { cep = value; }
 void Address::setLatitude(double value) { latitude = value; }
 void Address::setLongitude(double value) { longitude = value; }
+
+void Address::computeAverageCoordinates(
+    const Address* list,
+    int size,
+    double& avgLat,
+    double& avgLong
+) {
+    if (size == 0) {
+        avgLat = avgLong = 0.0;
+        return;
+    }
+
+    double sumLat = 0, sumLong = 0;
+
+    for (int i = 0; i < size; i++) {
+        sumLat += list[i].getLatitude();
+        sumLong += list[i].getLongitude();
+    }
+
+    avgLat = sumLat / size;
+    avgLong = sumLong / size;
+}

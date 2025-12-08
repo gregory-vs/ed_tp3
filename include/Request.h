@@ -1,49 +1,36 @@
 #ifndef REQUEST_H
 #define REQUEST_H
 
+#include <string>
+
 class Request {
 private:
-    int requestId;               // Identifier of the query request
-    char* rawQueryText;          // Full query text (e.g. "CALDEIRA BRANT")
-
-    char** words;                // Array of extracted words
-    int wordCount;
-    int wordCapacity;
-
-    double originLatitude;       // Origin point for distance calculation
-    double originLongitude;
-
-    char* copyString(const char* s);
-    void ensureWordCapacity();
-    void extractWords();         // Parse rawQueryText into words[]
+    double idRequest;
+    std::string queryName;
+    double latOrigin;
+    double longOrigin;
 
 public:
-    // Constructor
+    // Constructors
+    Request();
     Request(
-        int requestId,
-        const char* queryText,
-        double originLatitude,
-        double originLongitude
+        double idRequest,
+        const std::string& queryName,
+        double latOrigin,
+        double longOrigin
     );
 
-    // Destructor
-    ~Request();
-
     // Getters
-    int getRequestId() const;
-    const char* getRawQueryText() const;
-    int getWordCount() const;
-    const char* getWordAt(int index) const;
-    double getOriginLatitude() const;
-    double getOriginLongitude() const;
+    double getIdRequest() const;
+    std::string getQueryName() const;
+    double getLatOrigin() const;
+    double getLongOrigin() const;
 
     // Setters
-    void setRequestId(int value);
-    void setOriginLatitude(double value);
-    void setOriginLongitude(double value);
-
-    // Replace the entire query text (re-parses words)
-    void setQueryText(const char* newText);
+    void setIdRequest(double value);
+    void setQueryName(const std::string& value);
+    void setLatOrigin(double value);
+    void setLongOrigin(double value);
 };
 
 #endif

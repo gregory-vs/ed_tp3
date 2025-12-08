@@ -1,32 +1,34 @@
 #ifndef WORD_H
 #define WORD_H
 
+#include <string>
+
 class Word {
 private:
-    char* text;        // The word itself (e.g. "CALDEIRA", "BRANT")
-    int* streetIds;    // Dynamic array of street IDs where this word occurs
-    int streetCount;   // Current number of street IDs
-    int streetCapacity;// Allocated capacity for streetIds
+    std::string text;
+    double* streetIds;
+    int count;
+    int capacity;
 
-    char* copyString(const char* s);
-    void ensureCapacity();
-    bool containsStreetId(int streetId) const;
+    void expand();
 
 public:
-    // Constructor: creates a word with no associated streets yet
-    Word(const char* text);
+    Word();
+    Word(const std::string& text);
+    Word(const Word& other);
+    Word& operator=(const Word& other);
 
-    // Destructor
     ~Word();
 
-    // Getters
-    const char* getText() const;
-    int getStreetCount() const;
-    const int* getStreetIds() const;  // pointer to internal array (read-only)
-    int getStreetIdAt(int index) const;
+    std::string getText() const;
+    int getCount() const;
+    double getStreetIdAt(int index) const;
 
-    // Add a streetId to the list (ignores duplicates)
-    void addStreetId(int streetId);
+    void setText(const std::string& value);
+
+    void addStreetId(double idLog);
+
+    void print() const;
 };
 
 #endif
