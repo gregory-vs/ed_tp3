@@ -6,18 +6,54 @@
 #include "AddressList.h"
 #include "StreetList.h"
 #include "WordIndex.h"
-#include "Tokenizer.h"
 #include "Request.h"
 #include "RequestProcessor.h"
 
 using namespace std;
 
+static string* splitWords(const std::string& text, int& count) {
+    count = 0;
+
+    // contar palavras primeiro
+    bool inWord = false;
+    for (char c : text) {
+        if (c != ' ' && !inWord) {
+            count++;
+            inWord = true;
+        } else if (c == ' ') {
+            inWord = false;
+        }
+    }
+
+    if (count == 0)
+        return nullptr;
+
+    std::string* parts = new std::string[count];
+
+    int index = 0;
+    std::string current = "";
+    inWord = false;
+
+    for (char c : text) {
+        if (c != ' ') {
+            current.push_back(c);
+            inWord = true;
+        } else if (inWord) {
+            parts[index++] = current;
+            current = "";
+            inWord = false;
+        }
+    }
+
+    if (inWord)
+        parts[index++] = current;
+
+    return parts;
+}
+
 int main() {
 
-    ifstream file("entrada.txt");
-
     int addressCount = 0, numRequests = 0, maxAnswers = 0;
-    cin.rdbuf(file.rdbuf());
 
     cin >> addressCount;
     cin.ignore();
@@ -40,7 +76,7 @@ int main() {
         Street s = streetList.getAt(i);
 
         int wc = 0;
-        string* words = Tokenizer::split(s.getFullName(), wc);
+        string* words = splitWords(s.getFullName(), wc);
 
         for (int j = 0; j < wc; j++) {
             wordIndex.addWordOccurrence(words[j], s.getIdLog());

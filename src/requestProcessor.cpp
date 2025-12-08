@@ -1,7 +1,49 @@
 #include "RequestProcessor.h"
-#include "Tokenizer.h"
 #include <cmath>
 #include <iostream>
+#include <string>
+
+using namespace std;
+
+static string* splitWords(const string& text, int& count) {
+    count = 0;
+
+    // contar palavras primeiro
+    bool inWord = false;
+    for (char c : text) {
+        if (c != ' ' && !inWord) {
+            count++;
+            inWord = true;
+        } else if (c == ' ') {
+            inWord = false;
+        }
+    }
+
+    if (count == 0)
+        return nullptr;
+
+    string* parts = new string[count];
+
+    int index = 0;
+    string current = "";
+    inWord = false;
+
+    for (char c : text) {
+        if (c != ' ') {
+            current.push_back(c);
+            inWord = true;
+        } else if (inWord) {
+            parts[index++] = current;
+            current = "";
+            inWord = false;
+        }
+    }
+
+    if (inWord)
+        parts[index++] = current;
+
+    return parts;
+}
 
 RequestProcessor::RequestProcessor(StreetList* streets, WordIndex* index) {
     this->streets = streets;
@@ -11,7 +53,7 @@ RequestProcessor::RequestProcessor(StreetList* streets, WordIndex* index) {
 double RequestProcessor::computeDistance(double lat1, double long1, double lat2, double long2) const {
     double dx = lat1 - lat2;
     double dy = long1 - long2;
-    return std::sqrt(dx*dx + dy*dy);
+    return sqrt(dx*dx + dy*dy);
 }
 
 double* RequestProcessor::intersect(double* a, int aSize, double* b, int bSize, int& outSize) const {
@@ -49,7 +91,7 @@ void RequestProcessor::sortCandidates(Candidate* arr, int n) {
 int RequestProcessor::processRequest(const Request& req, Candidate*& results) {
 
     int wc = 0;
-    std::string* words = Tokenizer::split(req.getQueryName(), wc);
+    string* words = splitWords(req.getQueryName(), wc);
 
     if (wc == 0) {
         results = nullptr;
@@ -134,7 +176,7 @@ int RequestProcessor::processRequest(const Request& req, Candidate*& results) {
 
 void RequestProcessor::processAll(Request* requests, int count, int maxAnswers) {
 
-    std::cout << count << "\n";
+    cout << count << "\n";
 
     for (int i = 0; i < count; i++) {
 
@@ -143,14 +185,14 @@ void RequestProcessor::processAll(Request* requests, int count, int maxAnswers) 
 
         int R = (total < maxAnswers ? total : maxAnswers);
 
-        std::cout << requests[i].getIdRequest() << ";" << R << "\n";
+        cout << requests[i].getIdRequest() << ";" << R << "\n";
 
         if (R > 0) {
 
             sortCandidates(results, total);
 
             for (int j = 0; j < R; j++) {
-                std::cout << (int)results[j].idLog << ";" 
+                cout << (int)results[j].idLog << ";" 
                           << results[j].name << "\n";
             }
         }

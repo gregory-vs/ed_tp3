@@ -2,12 +2,12 @@
 
 // Constructors
 Address::Address()
-    : idEnd(0), idLog(0), streetType(""), streetName(""),
+    : idEnd(""), idLog(0), streetType(""), streetName(""),
       number(""), neighborhood(""), region(""), cep(""),
       latitude(0.0), longitude(0.0) {}
 
 Address::Address(
-    double idEnd,
+    const std::string& idEnd,
     double idLog,
     const std::string& streetType,
     const std::string& streetName,
@@ -25,7 +25,7 @@ Address::Address(
 
 
 // Getters
-double Address::getIdEnd() const { return idEnd; }
+std::string Address::getIdEnd() const { return idEnd; }
 double Address::getIdLog() const { return idLog; }
 std::string Address::getStreetType() const { return streetType; }
 std::string Address::getStreetName() const { return streetName; }
@@ -37,7 +37,7 @@ double Address::getLatitude() const { return latitude; }
 double Address::getLongitude() const { return longitude; }
 
 // Setters
-void Address::setIdEnd(double value) { idEnd = value; }
+void Address::setIdEnd(const std::string& value) { idEnd = value; }
 void Address::setIdLog(double value) { idLog = value; }
 void Address::setStreetType(const std::string& value) { streetType = value; }
 void Address::setStreetName(const std::string& value) { streetName = value; }

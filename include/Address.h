@@ -5,7 +5,7 @@
 
 class Address {
 private:
-    double idEnd;
+    std::string idEnd;
     double idLog;
     std::string streetType;
     std::string streetName;
@@ -20,7 +20,7 @@ public:
     Address();
 
     Address(
-        double idEnd,
+        const std::string& idEnd,
         double idLog,
         const std::string& streetType,
         const std::string& streetName,
@@ -33,7 +33,7 @@ public:
     );
 
     // Getters
-    double getIdEnd() const;
+    std::string getIdEnd() const;
     double getIdLog() const;
     std::string getStreetType() const;
     std::string getStreetName() const;
@@ -45,7 +45,7 @@ public:
     double getLongitude() const;
 
     // Setters
-    void setIdEnd(double value);
+    void setIdEnd(const std::string& value);
     void setIdLog(double value);
     void setStreetType(const std::string& value);
     void setStreetName(const std::string& value);

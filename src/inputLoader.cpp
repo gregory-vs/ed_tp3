@@ -29,7 +29,7 @@ Address* InputLoader::loadFromCin(int totalLines) {
         getline(ss, longStr, ';');
 
         list[i] = Address(
-            stod(idEndStr),
+            idEndStr,
             stod(idLogStr),
             streetType,
             streetName,
